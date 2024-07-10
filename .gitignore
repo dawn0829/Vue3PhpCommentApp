@@ -1,0 +1,8 @@
+# Ignore all directories and files except frontend-app and backend
+/dashboard
+/img
+/webalizer
+/xampp
+.bitnami.css
+.favicon.ico
+.index.php
