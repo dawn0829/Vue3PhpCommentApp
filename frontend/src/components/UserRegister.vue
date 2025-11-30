@@ -59,7 +59,7 @@
           return;
         }
         try {
-          const response = await axios.post('http://localhost/backend/register.php', {
+          const response = await axios.post('/backend/register.php', {
           username: this.username,
           email: this.email,
           password: this.password,

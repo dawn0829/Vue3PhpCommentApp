@@ -51,7 +51,7 @@ export default {
   methods: {
     fetchTopicData() {
       const topicId = this.$route.params.id;
-      axios.get(`http://localhost/backend/get_topic_with_comments.php?topic_id=${topicId}`)
+      axios.get(`/backend/get_topic_with_comments.php?topic_id=${topicId}`)
         .then(response => {
           this.topic = response.data.topic;
           this.comments = response.data.comments;
@@ -61,7 +61,7 @@ export default {
         });
     },
     getCurrentUser() {
-      axios.get('http://localhost/backend/check_login.php')
+      axios.get('/backend/check_login.php')
         .then(response => {
           this.currentUser.name = response.data.user_name;
         })
@@ -71,7 +71,7 @@ export default {
     },
     submitComment() {
       const topicId = this.$route.params.id;
-      axios.post('http://localhost/backend/post_comment.php', {
+      axios.post('/backend/post_comment.php', {
         topic_id: topicId,
         content: this.newComment
       })

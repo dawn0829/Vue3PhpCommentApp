@@ -12,7 +12,7 @@ app.use(router);
 router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
       try {
-        const response = await axios.get('http://localhost/backend/check_login.php');
+        const response = await axios.get('/backend/check_login.php');
         //console.log(response);
         if (response.data.loggedIn) {
             next();

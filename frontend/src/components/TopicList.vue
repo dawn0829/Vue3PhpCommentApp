@@ -70,7 +70,7 @@ export default {
   methods: {
     async fetchTopics() {
       try {
-        const response = await axios.get('http://localhost/backend/get_topic_with_user.php');
+        const response = await axios.get('/backend/get_topic_with_user.php');
         this.topics = response.data;
       } catch (error) {
         console.error('Failed to fetch topics:', error);
@@ -79,7 +79,7 @@ export default {
     async searchTopics() {
       try {
         //在get加入keyword參數
-        const response = await axios.get('http://localhost/backend/get_search_topic.php', {
+        const response = await axios.get('/backend/get_search_topic.php', {
           params: {
             keyword: this.newSearchQuery
           }

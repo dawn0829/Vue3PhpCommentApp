@@ -11,7 +11,7 @@
     name: 'UserLogout',
     async created() {
       try {
-        await axios.post('http://localhost/backend/logout.php');
+        await axios.post('/backend/logout.php');
         this.$router.push('/login');
       } catch (error) {
         console.error('Logout failed:', error);

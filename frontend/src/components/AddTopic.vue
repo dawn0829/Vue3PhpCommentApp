@@ -25,7 +25,7 @@
     },
     methods: {
       getCurrentUser() {
-        return axios.get('http://localhost/backend/check_login.php', { withCredentials: true })
+        return axios.get('/backend/check_login.php', { withCredentials: true })
           .then(response => {
             this.currentUser.id = response.data.user_id; // Assuming user_id is returned from check_login.php
 
@@ -43,7 +43,7 @@
                 title: this.title,
                 user_id: this.currentUser.id // Pass user_id to the backend
               };
-              return axios.post('http://localhost/backend/add_topic.php', postData, { withCredentials: true });
+              return axios.post('/backend/add_topic.php', postData, { withCredentials: true });
             })
             .then(() => {
               console.log("Topic added successfully");

@@ -44,7 +44,7 @@
     methods: {
       async login() {
         try {
-          const response = await axios.post('http://localhost/backend/login.php', {
+          const response = await axios.post('/backend/login.php', {
             email: this.email,
             password: this.password
           });
