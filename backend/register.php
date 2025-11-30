@@ -3,7 +3,7 @@ include 'db.php';
 
 $data = json_decode(file_get_contents("php://input"));
 
-if(!data || !isset($data->username) || !isset($data->email) || !isset($data->password)){
+if(!$data || !isset($data->username) || !isset($data->email) || !isset($data->password)){
     echo json_encode(["message" => "Invalid input"]);
     exit;
 }

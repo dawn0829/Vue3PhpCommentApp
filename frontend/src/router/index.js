@@ -12,7 +12,7 @@ const routes = [
   { path: '/register', name: 'UserRegister', component: Register },
   { path: '/login', name: 'Login', component: Login },
   { path: '/topics',name: 'TopicPage', component: TopicPage, meta: { requiresAuth: true }},
-  { path: '/chat', name: 'Chat', component: Chat },
+  { path: '/chat', name: 'Chat', component: Chat, meta: { requiresAuth: true }},
   { path: '/topics/:id', name: 'TopicDetail', component: TopicDetail,  meta: { requiresAuth: true }},
   { path: '/logout', name: 'UserLogout', component: UserLogout }
 ];

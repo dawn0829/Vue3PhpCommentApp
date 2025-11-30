@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "ASD900829123ASD";
 $dbname = "comment_app";
 
 try {

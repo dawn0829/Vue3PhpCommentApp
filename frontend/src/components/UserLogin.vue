@@ -2,7 +2,7 @@
   <section class="bg-gray-50 dark:bg-gray-900">
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a href="/" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-          <img class="w-32 h-23 mr-10" src="../assets/HGlogo.png" alt="logo">
+          <img class="h-23 mr-10" src="../assets/HGlogo.png" alt="logo">
           
       </a>
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -30,37 +30,58 @@
 
 </template>
   
-  <script>
-  import axios from 'axios';
-  axios.defaults.withCredentials = true; // ensure request Cookie
+<script>
+import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter, useRoute } from 'vue-router'
+import axios from 'axios'
 
-  export default {
-    data() {
-      return {
-        email: '',
-        password: ''
-      };
-    },
-    methods: {
-      async login() {
-        try {
-          const response = await axios.post('/backend/login.php', {
-            email: this.email,
-            password: this.password
+axios.defaults.withCredentials = true // ensure request Cookie
+
+export default {
+  setup() {
+    const email = ref('')
+    const password = ref('')
+
+    const store = useStore()
+    const router = useRouter()
+    const route = useRoute()
+
+    const login = async () => {
+      try {
+        const response = await axios.post('/backend/login.php', {
+          email: email.value,
+          password: password.value,
+        });
+
+        // 改為使用 error_code 判斷成功 (0 為成功)
+        if (response.data && (response.data.error_code === 0 || response.data.loggedIn)) {
+          console.log(response.data);
+          // 先更新 local store
+          store.commit('setLogin', {
+            id: response.data.user_id,
+            name: response.data.user_name,
           });
-          if (response.data.message === "Login successful") {
-            console.log(response.data);
-            const redirectPath = this.$route.query.redirect || '/topics';
-            this.$router.push(redirectPath);
-          } else {
-          alert(response.data.message);
-          }
 
-        } catch (error) {
-          console.error(error);
+          // 再同步與 server 檢查，避免 router guard 在導向時做錯誤判定
+          await store.dispatch('checkAuth');
+
+          const redirectPath = route.query.redirect || '/topics';
+          router.push(redirectPath);
+        } else {
+          alert(response.data.message || '登入失敗');
         }
+      } catch (error) {
+        console.error(error);
       }
     }
-  };
-  </script>
-  
+
+    return {
+      email,
+      password,
+      login,
+    }
+  },
+}
+</script>
+
