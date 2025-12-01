@@ -8,6 +8,7 @@ if(!$data || !isset($data->username) || !isset($data->email) || !isset($data->pa
     exit;
 }
 $username = $data->username;
+// bcrypt 密碼雜湊
 $password = password_hash($data->password, PASSWORD_DEFAULT);
 $email = $data->email;    
 
@@ -18,9 +19,9 @@ $params = [$username, $email, $password];
 $result = $conn->Execute($query, $params);
 
 if($result){
-    echo json_encode(["message" => "User registered successfully"]);
+    echo json_encode(["error_code" => 0, "message" => "User registered successfully"]);
 } else {
-    echo json_encode(["message" => "User registration failed"]);
+    echo json_encode(["error_code" => 1, "message" => "User registration failed"]);
 }
 
 $conn->close();

@@ -23,6 +23,31 @@ const store = createStore({
     }
   },
   actions: {
+    async login({ commit }, credentials) {
+      try {
+        const res = await axios.post('/backend/login.php', credentials);
+        if (res.data.error_code === 0) {
+          commit('setAuth', {
+            loggedIn: true,
+            user: { id: res.data.user_id, name: res.data.user_name }
+          });
+        }
+        return res.data;
+      } catch (error) {
+        commit('setAuth', { loggedIn: false, user: null });
+        throw error;
+      }
+    },
+    async logout({ commit }) {
+      try {
+        await axios.post('/backend/logout.php');
+        commit('setAuth', { loggedIn: false, user: null });
+      } catch (error) {
+        // 即使登出API失敗，也要把本地狀態設為未登入
+        commit('setAuth', { loggedIn: false, user: null });
+        throw error;
+      }
+    },
     async checkAuth({ commit }) {
       try {
         const res = await axios.get('/backend/check_login.php');

@@ -60,12 +60,18 @@
         }
         try {
           const response = await axios.post('/backend/register.php', {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          confirm_password: this.confirm_password
+            username: this.username,
+            email: this.email,
+            password: this.password,
+            confirm_password: this.confirm_password
           });
           console.log(response.data);
+          if (response.data.error_code == 0) {
+            alert("註冊成功");
+            this.$router.push('/login');
+          } else {
+            alert(response.data.message);
+          }
         } catch (error) {
           console.error(error);
         }

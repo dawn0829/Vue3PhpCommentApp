@@ -3,27 +3,7 @@
     <body class="h-screen overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
         <div class="flex h-screen overflow-hidden">
             <!-- Sidebar -->
-            <div class="w-1/4 bg-white border-r border-gray-300">
-            <!-- Sidebar Header -->
-            <header class="p-4 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white">
-                <h1 class="text-2xl font-semibold">Chat Web</h1>
-                <div class="relative">
-                <button id="menuButton" class="focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-100" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                    <path d="M2 10a2 2 0 012-2h12a2 2 0 012 2 2 2 0 01-2 2H4a2 2 0 01-2-2z" />
-                    </svg>
-                </button>
-                <!-- Menu Dropdown -->
-                <div id="menuDropdown" class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg hidden">
-                    <ul class="py-2 px-3">
-                    <li><a href="#" class="block px-4 py-2 text-gray-800 hover:text-gray-400">Option 1</a></li>
-                    <li><a href="#" class="block px-4 py-2 text-gray-800 hover:text-gray-400">Option 2</a></li>
-                    <!-- Add more menu options here -->
-                    </ul>
-                </div>
-                </div>
-            </header>
+            <div class="w-1/4 bg-white border-r border-gray-300 mt-20">
             
             <!-- Contact List -->
             <div class="overflow-y-auto h-screen p-3 mb-9 pb-20">
@@ -121,33 +101,7 @@
             </div>
             
             <!-- Main Chat Area -->
-            <div class="flex-1 flex flex-col">
-                <!-- Chat Header -->
-                <header class="bg-white p-4 text-gray-700">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h1 class="text-2xl font-semibold">AI 助手</h1>
-                            <p class="text-sm text-gray-500">使用 Gemma 3 模型 • 對話ID: {{ conversationId }}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                          <button
-                            @click="loadChatHistory"
-                            class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded"
-                            :disabled="isLoading"
-                          >
-                            ↻ 重新載入
-                          </button>
-                          <button
-                            @click="startNewConversation"
-                            class="text-sm bg-blue-100 hover:bg-blue-200 text-blue-600 px-3 py-1 rounded"
-                            :disabled="isLoading"
-                          >
-                            🆕 新對話
-                          </button>
-                        </div>
-                    </div>
-                </header>
-                
+            <div class="flex-1 flex flex-col mt-20">
                 <!-- Chat Messages -->
                 <div class="flex-1 overflow-y-auto p-4 pb-36" ref="chatMessagesContainer">
                   <div v-for="message in messages" :key="message.id" class="mb-4">

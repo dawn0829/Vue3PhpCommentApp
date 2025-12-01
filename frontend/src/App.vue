@@ -36,32 +36,7 @@
                  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-amber-800
                  dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
         >
-          <!-- 登入 / 登出 改成按鈕，依 isLoggedIn 顯示 -->
-          <li v-if="!isLoggedIn">
-            <button
-              type="button"
-              @click="handleLogin"
-              class="font-bold block py-2 px-3 text-white rounded border-4 border-amber-800
-                     hover:bg-gray-100 md:hover:bg-transparent md:border-4 md:border-amber-800
-                     md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500
-                     dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >
-              登入
-            </button>
-          </li>
-          <li v-else>
-            <button
-              type="button"
-              @click="handleLogout"
-              class="font-bold block py-2 px-3 text-white rounded border-4 border-amber-800
-                     hover:bg-gray-100 md:hover:bg-transparent md:border-4 md:border-amber-800
-                     md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500
-                     dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >
-              登出
-            </button>
-          </li>
-
+          
           <!-- 其他功能一樣用 router-link -->
           <li>
             <router-link
@@ -85,65 +60,111 @@
               聊天室
             </router-link>
           </li>
+          <!-- 登入 / 登出 改成按鈕，依 isLoggedIn 顯示 -->
+          <li v-if="!isLoggedIn">
+            <button
+              type="button"
+              @click="handleLogin"
+              :disabled="isLoginLoading"
+              class="font-bold block py-2 px-3 text-white rounded border-4 border-amber-800
+                     hover:bg-gray-100 md:hover:bg-transparent md:border-4 md:border-amber-800
+                     md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500
+                     dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent
+                     disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ isLoginLoading ? '登入中...' : '登入' }}
+            </button>
+          </li>
+          <li v-else>
+            <button
+              type="button"
+              @click="handleLogout"
+              :disabled="isLogoutLoading"
+              class="font-bold block py-2 px-3 text-white rounded border-4 border-amber-800
+                     hover:bg-gray-100 md:hover:bg-transparent md:border-4 md:border-amber-800
+                     md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500
+                     dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent
+                     disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ isLogoutLoading ? '登出中...' : '登出' }}
+            </button>
+          </li>
+
         </ul>
       </div>
     </div>
   </nav>
 
-  <div id="app" class="pt-16">
+  <div id="app">
     <!-- 上面有 fixed nav，所以這邊加點 padding-top 避免被蓋住 -->
     <router-view></router-view>
   </div>
 </template>
 
-<script>
+<script setup>
 // import axios from 'axios'
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
-export default {
-  name: 'App',
-  data() {
-    return {
-      isNavbarOpen: false
+// 使用 composition API
+const store = useStore()
+const router = useRouter()
+
+// 響應式數據
+const isNavbarOpen = ref(false)
+const isLoginLoading = ref(false)
+const isLogoutLoading = ref(false)
+
+// 從 store 獲取響應式數據
+const isLoggedIn = computed(() => store.getters.isLoggedIn)
+// const user = computed(() => store.getters.user)
+
+// 組件掛載時檢查登入狀態
+onMounted(async () => {
+  try {
+    await store.dispatch('checkAuth')
+  } catch (error) {
+    console.error('檢查登入狀態失敗:', error)
+  }
+})
+// 方法函數
+const toggleNavbar = () => {
+  isNavbarOpen.value = !isNavbarOpen.value
+}
+
+// 按下登入按鈕：發 API，成功後更新 Vuex
+const handleLogin = async () => {
+  isLoginLoading.value = true
+  try {
+    // 這裡示範用固定帳密，你可以改成彈出登入視窗/從表單拿資料
+    const credentials = {
+      email: 'testuser@example.com',
+      password: 'testpassword'
     }
-  },
-  computed: {
-    isLoggedIn() {
-      return this.$store.state.isLoggedIn
-    }
-  },
-  methods: {
-    toggleNavbar() {
-      this.isNavbarOpen = !this.isNavbarOpen
-    },
 
-    // 按下登入按鈕：發 API，成功後更新 Vuex
-    async handleLogin() {
-      try {
-        // 這裡示範用固定帳密，你可以改成彈出登入視窗/從表單拿資料
-        const credentials = {
-          username: 'testuser',
-          password: 'testpassword'
-        }
+    await store.dispatch('login', credentials)
+    // 登入成功後如果要跳轉頁面，可加這行：
+    // router.push('/topics')
+  } catch (err) {
+    console.error('登入失敗', err)
+    alert('登入失敗')
+  } finally {
+    isLoginLoading.value = false
+  }
+}
 
-        await this.$store.dispatch('login', credentials)
-        // 登入成功後如果要跳轉頁面，可加這行：
-        // this.$router.push('/topics')
-      } catch (err) {
-        console.error('登入失敗', err)
-        alert('登入失敗')
-      }
-    },
-
-    // 按下登出按鈕：發 API，成功後更新 Vuex
-    async handleLogout() {
-      try {
-        await this.$store.dispatch('logout')
-        // this.$router.push('/') // 看你要不要回首頁
-      } catch (err) {
-        console.error('登出失敗', err)
-        alert('登出失敗')
-      }
-    }
+// 按下登出按鈕：發 API，成功後更新 Vuex
+const handleLogout = async () => {
+  isLogoutLoading.value = true
+  try {
+    await store.dispatch('logout')
+    router.push('/') // 登出後跳轉首頁
+  } catch (err) {
+    console.error('登出失敗', err)
+    alert('登出失敗')
+  } finally {
+    isLogoutLoading.value = false
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-20 w-full bg-white rounded-lg border p-2 my-4 mx-6">
+  <div class="mt-20 bg-white rounded-lg border p-2 my-4 mx-6">
     <h3 class="font-bold">{{ topic.title }}</h3>
     <form @submit.prevent="submitComment">
       <div class="flex flex-col">
